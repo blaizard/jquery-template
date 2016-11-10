@@ -1,3 +1,4 @@
+// TODO - replace <template> by the module name and delete this comment
 /**
  * jQuery Module Template
  *
@@ -6,8 +7,6 @@
  */
 
 (function($) {
-	// TODO - replace <template> by the module name
-
 	/**
 	 * \brief .\n
 	 * Auto-load the <template> modules for the tags with a data-<template> field.\n
@@ -25,13 +24,12 @@
 	 * \return {jQuery}
 	 */
 	$.fn.<template> = function(arg, data) {
-		/* This is the returned value */
 		var retval;
-		/* Go through each objects */
+		// Go through each objects
 		$(this).each(function() {
 			retval = $().<template>.x.call(this, arg, data);
 		});
-		/* Make it chainable, or return the value if any  */
+		// Make it chainable, or return the value if any
 		return (typeof retval === "undefined") ? $(this) : retval;
 	};
 
@@ -40,33 +38,32 @@
 	 * \private
 	 */
 	$.fn.<template>.x = function(arg, data) {
-		/* Load the default options */
+		// Load the default options
 		var options = $.fn.<template>.defaults;
 
-		/* --- Deal with the actions / options --- */
-		/* Set the default action */
+		// --- Deal with the actions / options ---
+		// Set the default action
 		var action = "create";
-		/* Deal with the action argument if it has been set */
+		// Deal with the action argument if it has been set
 		if (typeof arg === "string") {
 			action = arg;
 		}
-		/* If the module is already created and the action is not create, load its options */
+		// If the module is already created and the action is not create, load its options
 		if (action != "create" && $(this).data("<template>")) {
 			options = $(this).data("<template>");
 		}
-		/* If the first argument is an object, this means options have
-		 * been passed to the function. Merge them recursively with the
-		 * default options.
-		 */
+		// If the first argument is an object, this means options have
+		// been passed to the function. Merge them recursively with the
+		// default options.
 		if (typeof arg === "object") {
 			options = $.extend(true, {}, options, arg);
 		}
-		/* Store the options to the module */
+		// Store the options to the module
 		$(this).data("<template>", options);
 
-		/* Handle the different actions */
+		// Handle the different actions
 		switch (action) {
-		/* Create action */
+		// Create action
 		case "create":
 			break;
 		};
@@ -91,10 +88,8 @@
 	/**
 	 * \brief Associate the <template> module to all elements containing the
 	 * data-<template> tag (unless another one is specified).
-	 * \code <div data-<template>="theme: aqua;"></div>
+	 * \code <div data-<template>="{theme: 'aqua'}"></div>
 	 * <script> $("body").<template>.load(); </script>\endcode
-	 *
-	 * \alias <template>.load
 	 *
 	 * \param {String} [attribute] The name of the attribute.
 	 */
@@ -102,13 +97,16 @@
 		if (typeof attribute === "undefined") {
 			attribute = "data-<template>";
 		}
-		/* Load the function */
-		if (typeof irutilz_load === "function") {
-			$(this).find("[" + attribute + "]").addBack("[" + attribute + "]").each(function() {
-				var options = irutilz_load.call(this, attribute);
-				$(this).<template>(options);
-			});
-		}
+		// Load the module(s)
+		$(this).find("[" + attribute + "]").addBack("[" + attribute + "]").each(function() {
+			try {
+				var options = JSON.parse($(this).attr(attribute));
+			}
+			catch(e) {
+				var options = {};
+			}
+			$(this).<template>(options);
+		});
 	};
 
 })(jQuery);
